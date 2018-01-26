@@ -1,4 +1,9 @@
 easy_admin:
+    design:
+        menu:
+            - Product
+            - User
+            - { label: 'Return Home', route: 'homepage', params: { id: 1 } }
     entities:
         - App\Entity\Product
         - App\Entity\User
