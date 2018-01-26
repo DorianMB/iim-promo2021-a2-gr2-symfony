@@ -50,7 +50,7 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @var array
      *
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="array")
      */
     private $roles;
 
@@ -70,7 +70,7 @@ class User implements AdvancedUserInterface, \Serializable
     public function __construct()
     {
         $this->active = true;
-        $this->roles  = [];
+        $this->roles  = ['ROLE_DEFAULT'];
     }
 
     /**

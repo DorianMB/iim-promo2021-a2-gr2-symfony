@@ -12,26 +12,51 @@ use Symfony\Component\HttpFoundation\Response;
 class DefaultController extends Controller
 {
     /**
-     * @Route(path="/", name="homepage")
+     * @Route(path="/", name="start")
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function homepage()
+    public function start(){
+        return $this->redirect('/home/1');
+    }
+    /**
+     * @Route(path="home/{id}", name="homepage")
+     * @param $id
+     * @return Response
+     */
+    public function homepage(int $id)
     {
         $manager = $this->getDoctrine()->getManager();
         /** @var ProductRepository $repo */
-        $repo = $manager->getRepository(Product::class);
+        $limit = 12;
+        $offset = ($id-1)*12;
+        $repo = $manager->getRepository(Product::class)->findBy([], null, $limit, $offset);
 
-        $user = new User();
-        $user
-            ->setUsername('user')
-            ->setEmail('john.doe@gmail.com')
-            ->setPlainPassword('user')
-            ->addRole(User::ROLE_DEFAULT);
-        $manager->persist($user);
+        $repos = $manager->getRepository(Product::class)->findAll();
+        $count = count($repos)/12;
+        $count = round($count, 0, PHP_ROUND_HALF_UP);
+
+        /*for ($i=101; $i<=100;$i++) {
+            $prod = new Product();
+            $prod
+                ->setName('prod ' . $i)
+                ->setDescription('le produit n°' . $i);
+            $manager->persist($prod);
+        }
         $manager->flush();
+        $manager->clear();*/
 
+        /*$prod = new User();
+        $prod
+            ->setUsername('user')
+            ->setEmail('user@user.fr')
+            ->setPlainPassword('user');
+        $manager->persist($prod);
+        $manager->flush();*/
 
         return $this->render('homepage.html.twig', [
-            'thibaud' => 'He\'s awesome anyway 😎',
+            'repo' => $repo,
+            'id' => $id,
+            'count' => $count,
         ]);
     }
 }
